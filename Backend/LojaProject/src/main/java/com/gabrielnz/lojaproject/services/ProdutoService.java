@@ -28,7 +28,7 @@ public class ProdutoService {
         List<Produto> produtos = produtoRepository.findAll();
 
         // Transformo a lista de produtos em um array e verifico se o tamanho é maior que 5
-        if (produtos.toArray().length > 5) {
+        if (produtos.toArray().length >= 5) {
             throw new RuntimeException("Não é possível adicionar mais produtos. Limite de 5 produtos atingido.");
         }
 

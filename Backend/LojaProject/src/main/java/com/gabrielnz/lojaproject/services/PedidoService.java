@@ -4,6 +4,7 @@ import com.gabrielnz.lojaproject.entities.Produto;
 import com.gabrielnz.lojaproject.entities.dtos.PedidoDTO;
 import com.gabrielnz.lojaproject.entities.dtos.ProdutoDTO;
 import com.gabrielnz.lojaproject.repositories.PedidoRepository;
+import com.gabrielnz.lojaproject.repositories.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +15,8 @@ import java.util.List;
 public class PedidoService {
     @Autowired
     private PedidoRepository pedidoRepository;
+    @Autowired
+    private ProdutoRepository produtoRepository;
 
     public Pedido getPedidoById(Long id) {
         return pedidoRepository.findById(id).orElse(null);
@@ -24,54 +27,56 @@ public class PedidoService {
     }
 
     @Transactional
-    public Pedido salvarPedido(PedidoDTO pedido) {
-        if (pedido.produtos().isEmpty()) {
+    public Pedido salvarPedido(PedidoDTO pedidoDTO) {
+
+        if (pedidoDTO.produtos().isEmpty()) {
             throw new RuntimeException("O pedido deve conter pelo menos um produto.");
         }
 
+        // Settando a lista de produtos do pedido, mapeando cada ProdutoDTO para um Produto atraves do Id.
+        List<Produto> produtos = pedidoDTO.produtos().stream().map(dto ->
+                produtoRepository.findById(dto.id()).orElseThrow(() -> new RuntimeException("Produto não encontrado com id: " + dto.id())))
+                .toList();
+
         // Somando o valor total do pedido atraves de uma expressao lambda
-        Double valorTotal = pedido.produtos().stream().map(ProdutoDTO::preco).reduce(0.0, Double::sum);
+        double valorTotal = produtos.stream()
+                .mapToDouble(Produto::getPreco)
+                .sum();
 
         // Verificando se a soma resulta em um valor maior que 1000.0.
         if (valorTotal > 1000.0) {
-            throw new RuntimeException("O preço total do pedido deve ser maior que zero.");
+            throw new RuntimeException("O preço total do pedido não pode ser maior que R$ 1.000,00.");
         }
 
-        Pedido p = new Pedido();
+        Pedido pedido = new Pedido();
 
-        p.setValorTotal(valorTotal);
+        pedido.setValorTotal(valorTotal);
+        pedido.setProdutos(produtos);
 
-        // Settando a lista de produtos do pedido, mapeando cada ProdutoDTO para um Produto e retornando uma lista para o Pedido.
-        p.setProdutos(pedido.produtos().stream().map(produtoDTO -> {
-            Produto produto = new Produto();
-            produto.setNome(produtoDTO.nome());
-            produto.setPreco(produtoDTO.preco());
-            return produto;
-        }).toList());
-
-        return pedidoRepository.save(p);
+        return pedidoRepository.save(pedido);
     }
 
     @Transactional
-    public Pedido atualizarPedido(Long id, PedidoDTO produto) {
-        Pedido p = pedidoRepository.findById(id).orElse(null);
-        if (p == null) {
-            throw new RuntimeException("Pedido não encontrado com id: " + id);
+    public Pedido atualizarPedido(Long id, PedidoDTO pedidoDTO) {
+        Pedido pedido = pedidoRepository.findById(id).orElseThrow(() ->
+                        new RuntimeException("Pedido não encontrado com id: " + id));
+
+        // Settando a lista de produtos do pedido, mapeando cada ProdutoDTO para um Produto atraves do Id.
+        List<Produto> produtos = pedidoDTO.produtos().stream().map(dto ->
+                        produtoRepository.findById(dto.id()).orElseThrow(() ->
+                        new RuntimeException("Produto não encontrado com id: " + dto.id())))
+                .toList();
+        double valorTotal = produtos.stream().mapToDouble(Produto::getPreco).sum();
+
+        // Verificando se a soma resulta em um valor maior que 1000.0.
+        if (valorTotal > 1000.0) {
+            throw new RuntimeException("O preço total do pedido não pode ser maior que R$ 1.000,00.");
         }
-        Pedido pedido = new Pedido();
 
-        // Pegando a soma do valor total do pedido atraves de uma expressao lambda
-        pedido.setValorTotal(produto.produtos().stream().map(ProdutoDTO::preco).reduce(0.0, Double::sum));
+        pedido.setValorTotal(valorTotal);
+        pedido.setProdutos(produtos);
 
-        // Settando a lista de produtos do pedido, mapeando cada ProdutoDTO para um Produto e retornando uma lista para o Pedido.
-        p.setProdutos(produto.produtos().stream().map(ProdutoDTO -> {
-           Produto prod = new Produto();
-           prod.setNome(ProdutoDTO.nome());
-           prod.setPreco(ProdutoDTO.preco());
-           return prod;
-        }).toList());
-
-        return pedidoRepository.save(p);
+        return pedidoRepository.save(pedido);
     }
 
     @Transactional

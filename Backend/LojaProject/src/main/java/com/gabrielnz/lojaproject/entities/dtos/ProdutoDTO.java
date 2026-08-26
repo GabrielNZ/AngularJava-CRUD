@@ -1,4 +1,4 @@
 package com.gabrielnz.lojaproject.entities.dtos;
 
-public record ProdutoDTO(String nome, Double preco) {
+public record ProdutoDTO(Long id, String nome, Double preco) {
 }
