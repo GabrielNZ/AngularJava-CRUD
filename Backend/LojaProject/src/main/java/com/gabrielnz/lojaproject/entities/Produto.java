@@ -14,9 +14,6 @@ public class Produto {
     private String nome;
     private Double preco;
 
-    // Daria pra acresentar informacoes utilizando uma classe auxiliar: "ITEM_PEDIDO" acrescentando quantidade, desconto, etc.
-    // Porem traria outro tipo de relacao, na qual nao foi solicitada.
-
     @ManyToMany(mappedBy = "produtos")
     private List<Pedido> pedidos;       // Relacao de PK composta
 
