@@ -1,1 +1,77 @@
-<p>produto works!</p>
+<div class="w-full max-w-125 mx-auto mt-5">
+    <p-card>
+        <p-accordion [multiple]="true" [value]="['0', '1']">
+
+            <p-accordion-panel value="0">
+                <p-accordion-header>
+                    <div class="flex items-center gap-2">
+                        <i class="pi pi-plus"></i>
+                        <span>Adicionar Produto</span>
+                    </div>
+                </p-accordion-header>
+
+                <p-accordion-content>
+                    <form #pedidoFrm="ngForm" class="flex flex-row gap-4 items-center mt-3"
+                        (ngSubmit)="adicionarProduto()">
+                        <div class="flex gap-4 flex-1">
+                            <p-floatlabel variant="in" class="flex-1">
+                                <input pInputText id="nome" name="nome" [(ngModel)]="nome" autocomplete="off"
+                                    class="w-full" />
+                                <label for="nome">Nome:</label>
+                            </p-floatlabel>
+
+                            <p-floatlabel variant="in" class="flex-1">
+                                <input pInputText id="preco" name="preco" [(ngModel)]="preco" autocomplete="off"
+                                    class="w-full" />
+                                <label for="preco">Preço:</label>
+                            </p-floatlabel>
+                        </div>
+
+                        <p-button type="submit" icon="pi pi-check" [rounded]="true" [text]="true" [raised]="true"
+                            severity="success" />
+                    </form>
+                </p-accordion-content>
+            </p-accordion-panel>
+
+            <p-accordion-panel value="1">
+                <p-accordion-header>
+                    <div class="flex items-center gap-2">
+                        <i class="pi pi-list"></i>
+                        <span>Lista de Produtos</span>
+                    </div>
+                </p-accordion-header>
+
+                <p-accordion-content>
+                    <p-dataview #dv [value]="produtos" class="w-full">
+                        <ng-template #list let-items>
+                            <div class="grid grid-cols-12 gap-4">
+                                <div *ngFor="let item of produtos; let first = first" class="col-span-12">
+                                    <div class="flex flex-col sm:flex-row sm:items-center p-6 gap-4" [ngClass]="{
+                                            'border-t border-surface-200 dark:border-surface-700': !first
+                                        }">
+                                        <div
+                                            class="flex flex-col md:flex-row justify-between md:items-center flex-1 gap-6">
+                                            <div class="text-lg font-medium text-surface-900 dark:text-surface-0">
+                                                {{ item.nome }}
+                                            </div>
+
+                                            <div class="flex flex-col md:items-end gap-4">
+                                                <span
+                                                    class="text-xl font-semibold text-surface-900 dark:text-surface-0">
+                                                    {{ '$' + item.preco }}
+                                                </span>
+
+                                                <p-button icon="pi pi-shopping-cart" label="Buy Now" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </p-dataview>
+                </p-accordion-content>
+            </p-accordion-panel>
+
+        </p-accordion>
+    </p-card>
+</div>
