@@ -10,21 +10,25 @@ import { MenuItem } from 'primeng/api';
 import { Menu } from 'primeng/menu';
 import { FloatLabelModule } from "primeng/floatlabel"
 import { InputTextModule } from 'primeng/inputtext';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, Validators, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AccordionModule } from 'primeng/accordion';
 import { CardModule } from 'primeng/card';
+import { FloatLabel } from 'primeng/floatlabel';
+import { InputNumber } from 'primeng/inputnumber';
 
 @Component({
   selector: 'app-produto',
-  imports: [SplitterModule, DataView, ButtonModule, Tag, CommonModule, Menu, FloatLabelModule, InputTextModule, FormsModule, AccordionModule, CardModule],
+  imports: [SplitterModule, DataView, ButtonModule, Tag, CommonModule, Menu, FloatLabelModule, InputTextModule, FormsModule, AccordionModule, CardModule, FloatLabel, InputNumber, ReactiveFormsModule],
   templateUrl: './produto.component.html',
   styleUrl: './produto.component.scss'
 })
 export class ProdutoComponent {
   produtos: Produto[] = [];
   items: MenuItem[] | undefined;
-  nome: string = '';
-  preco: number | undefined;
+  produtosForm: FormGroup = new FormGroup({
+    nome: new FormControl('', Validators.required),
+    preco: new FormControl('', Validators.required)
+  });
 
   constructor(private produtoService: ProdutoService) { }
 
@@ -39,6 +43,21 @@ export class ProdutoComponent {
     ];
   }
   adicionarProduto() {
-  
+    if (!this.produtosForm.valid) {
+      return;
+    }
+    const novoProduto: Produto = {
+      nome: this.produtosForm.value.nome,
+      preco: this.produtosForm.value.preco
+    };
+    this.produtosForm.reset();
+    this.produtoService.postProdutos(novoProduto).subscribe({
+      next: (produto) => {
+        this.produtos.push(produto);
+      },
+      error: (error) => {
+        alert('Erro ao adicionar produto: ' + error.error?.message);
+      }
+    });
   }
 }
