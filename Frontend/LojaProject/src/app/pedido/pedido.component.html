@@ -1,1 +1,33 @@
-<p>pedido works!</p>
+<div class="w-full max-w-200 mx-auto mt-5">
+    <p-accordion value="0">
+        @for (item of pedidos; track $index) {
+        <p-accordion-panel value={{item.id}}>
+            <p-accordion-header class="flex flex-row justify-around"><span>Pedido {{item.id}}</span><span>Qnt Produtos:
+                    {{item.produtos?.length}} | Valor Total: {{item.valorTotal}}</span></p-accordion-header>
+            <p-accordion-content>
+                <div *ngFor="let produto of item.produtos; let first = first" class="col-span-12">
+                    <div class="flex flex-col sm:flex-row sm:items-center px-4 py-2 gap-2"
+                        [ngClass]="{ 'border-t border-surface-200 dark:border-surface-700': !first }">
+
+                        <div class="flex flex-col md:flex-row justify-between md:items-center flex-1 gap-3">
+                            <div class="text-base flex flex-col font-medium text-surface-900 dark:text-surface-0">
+                                {{ produto.nome }}
+                                |
+                                {{ '$' + produto.preco }}
+
+                            </div>
+
+                            <div class="flex flex-row gap-2">
+                                <p-confirmPopup />
+
+                                <p-button (click)="deletarProdutoPedido(item, produto)" severity="danger"
+                                    icon="pi pi-trash" size="small" class="p-button-outlined" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </p-accordion-content>
+        </p-accordion-panel>
+        }
+    </p-accordion>
+</div>

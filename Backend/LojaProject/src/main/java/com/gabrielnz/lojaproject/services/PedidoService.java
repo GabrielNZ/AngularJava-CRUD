@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -62,10 +63,9 @@ public class PedidoService {
                         new RuntimeException("Pedido não encontrado com id: " + id));
 
         // Settando a lista de produtos do pedido, mapeando cada ProdutoDTO para um Produto atraves do Id.
-        List<Produto> produtos = pedidoDTO.produtos().stream().map(dto ->
-                        produtoRepository.findById(dto.id()).orElseThrow(() ->
-                        new RuntimeException("Produto não encontrado com id: " + dto.id())))
-                .toList();
+        List<Produto> produtos = new ArrayList<>(
+                pedidoDTO.produtos().stream().map(dto -> produtoRepository.findById(dto.id()).orElseThrow(() ->
+                        new RuntimeException("Produto não encontrado com id: " + dto.id()))).toList());
         double valorTotal = produtos.stream().mapToDouble(Produto::getPreco).sum();
 
         // Verificando se a soma resulta em um valor maior que 1000.0.
@@ -74,7 +74,8 @@ public class PedidoService {
         }
 
         pedido.setValorTotal(valorTotal);
-        pedido.setProdutos(produtos);
+        pedido.getProdutos().clear();
+        pedido.getProdutos().addAll(produtos);
 
         return pedidoRepository.save(pedido);
     }

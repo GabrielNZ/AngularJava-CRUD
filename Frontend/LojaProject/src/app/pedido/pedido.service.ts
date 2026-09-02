@@ -17,4 +17,11 @@ export class PedidoService {
   postPedido(pedido: Pedido): Observable<Pedido> {
     return this.http.post<Pedido>('http://localhost:8080/pedidos', pedido);
   }
+  atualizarPedido(pedidoId: number, pedido: Pedido): Observable<Pedido> {
+    return this.http.put<Pedido>(`http://localhost:8080/pedidos/${pedidoId}`, pedido);
+  }
+
+  deletePedido(pedidoId: number): Observable<void> {
+    return this.http.delete<void>(`http://localhost:8080/pedidos/${pedidoId}`);
+  }
 }
