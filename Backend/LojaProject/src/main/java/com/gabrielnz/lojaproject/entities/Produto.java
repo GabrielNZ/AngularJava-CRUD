@@ -1,5 +1,6 @@
 package com.gabrielnz.lojaproject.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -15,6 +16,7 @@ public class Produto {
     private Double preco;
 
     @ManyToMany(mappedBy = "produtos")
+    @JsonIgnore // Impedir looping infinito na serializacao JSON
     private List<Pedido> pedidos;       // Relacao de PK composta
 
     public Long getId() {

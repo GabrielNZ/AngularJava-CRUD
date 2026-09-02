@@ -35,7 +35,7 @@
 
             <p-accordion-panel value="1">
                 <p-accordion-header>
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center align gap-2">
                         <i class="pi pi-list"></i>
                         <span>Lista de Produtos</span>
                     </div>
@@ -44,13 +44,21 @@
                 <p-accordion-content>
                     <p-dataview #dv [value]="produtos" class="w-full">
                         <ng-template #list let-items>
+                            @if (produtosComprados.length > 0) {
+                            <p-button (click)="submit()" label="Finalizar Compra" [outlined]="true" />
+                            } @else {
+                            <p-button severity="secondary" disabled="true" (click)="submit()" label="Finalizar Compra"
+                                [outlined]="true" />
+                            }
                             <div class="grid grid-cols-12">
                                 <div *ngFor="let item of produtos; let first = first" class="col-span-12">
                                     <div class="flex flex-col sm:flex-row sm:items-center p-6 gap-4" [ngClass]="{
                                             'border-t border-surface-200 dark:border-surface-700': !first
                                         }">
-                                        <div class="flex flex-col md:flex-row justify-between md:items-center flex-1 gap-6">
-                                            <div class="text-lg flex flex-col font-medium text-surface-900 dark:text-surface-0">
+                                        <div
+                                            class="flex flex-col md:flex-row justify-between md:items-center flex-1 gap-6">
+                                            <div
+                                                class="text-lg flex flex-col font-medium text-surface-900 dark:text-surface-0">
                                                 {{ item.nome }}
                                                 <span
                                                     class="text-xl font-semibold text-surface-900 dark:text-surface-0">
@@ -58,8 +66,16 @@
                                                 </span>
                                             </div>
                                             <div class="flex flex-row gap-2">
-                                                <p-button icon="pi pi-shopping-cart" label="Buy Now" />
-                                                <p-button severity="danger" icon="pi pi-trash" class="p-button-outlined" />
+                                                @if (item.comprado == true) {
+                                                <p-button (click)="removerProduto(item.id!)" icon="pi pi-times"
+                                                    label="" />
+                                                } @else {
+                                                <p-button (click)="comprarProduto(item.id!)" icon="pi pi-shopping-cart"
+                                                    label="Buy Now" />
+                                                }
+                                                <p-confirmPopup />
+                                                <p-button (click)="deletarProduto(item.id!, $event)" severity="danger"
+                                                    icon="pi pi-trash" class="p-button-outlined" />
                                             </div>
                                         </div>
                                     </div>

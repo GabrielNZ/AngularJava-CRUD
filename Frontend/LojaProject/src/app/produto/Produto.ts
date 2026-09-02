@@ -5,4 +5,5 @@ export class Produto {
     nome?: string
     preco?: number
     pedidos?: Pedido[]
+    comprado?: boolean
 }
