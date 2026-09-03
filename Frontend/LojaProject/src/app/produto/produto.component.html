@@ -26,9 +26,13 @@
                                 <label for="preco">Preço:</label>
                             </p-floatlabel>
                         </div>
-
+                        @if (atualizar == true) {
+                        <p-button (click)="atualizarProduto()" icon="pi pi-pencil" [rounded]="true" [text]="true" [raised]="true"
+                            severity="success" />
+                        } @else {
                         <p-button type="submit" icon="pi pi-check" [rounded]="true" [text]="true" [raised]="true"
                             severity="success" />
+                        }
                     </form>
                 </p-accordion-content>
             </p-accordion-panel>
@@ -67,15 +71,22 @@
                                             </div>
                                             <div class="flex flex-row gap-2">
                                                 @if (item.comprado == true) {
-                                                <p-button (click)="removerProduto(item.id!)" icon="pi pi-times"
-                                                    label="" />
+                                                <p-button [raised]="true" size="small"
+                                                    (click)="removerProduto(item.id!)" icon="pi pi-times" label="" />
                                                 } @else {
-                                                <p-button (click)="comprarProduto(item.id!)" icon="pi pi-shopping-cart"
-                                                    label="Buy Now" />
+                                                <p-button [raised]="true" size="small"
+                                                    (click)="comprarProduto(item.id!)" icon="pi pi-shopping-cart"
+                                                    label="Comprar" />
                                                 }
-                                                <p-confirmPopup />
-                                                <p-button (click)="deletarProduto(item.id!, $event)" severity="danger"
-                                                    icon="pi pi-trash" class="p-button-outlined" />
+                                                <p-button [raised]="true" size="small" (click)="solicitarAtualizarProduto(item)"
+                                                    severity="secondary" icon="pi pi-pencil"
+                                                    class="p-button-outlined" />
+                                                <div>
+                                                    <p-confirmPopup />
+                                                    <p-button [raised]="true" size="small"
+                                                        (click)="deletarProduto(item.id!, $event)" severity="danger"
+                                                        icon="pi pi-trash" class="p-button-outlined" />
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

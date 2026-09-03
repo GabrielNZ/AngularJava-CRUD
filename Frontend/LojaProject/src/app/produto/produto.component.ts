@@ -25,6 +25,7 @@ import { PedidoService } from '../pedido/pedido.service';
   providers: [ConfirmationService]
 })
 export class ProdutoComponent {
+  produto: Produto = new Produto();
   produtos: Produto[] = [];
   produtosComprados: Produto[] = [];
   items: MenuItem[] | undefined;
@@ -32,10 +33,12 @@ export class ProdutoComponent {
     nome: new FormControl('', Validators.required),
     preco: new FormControl('', Validators.required)
   });
+  atualizar: boolean = false;
 
   constructor(private produtoService: ProdutoService, private pedidoService: PedidoService, private confirmationService: ConfirmationService) { }
 
   ngOnInit() {
+    this.atualizar = false;
     this.getProdutos();
     this.items = [
       { label: 'New', icon: 'pi pi-plus' },
@@ -52,12 +55,12 @@ export class ProdutoComponent {
     if (!this.produtosForm.valid) {
       return;
     }
-    const novoProduto: Produto = {
+    this.produto = {
       nome: this.produtosForm.value.nome,
       preco: this.produtosForm.value.preco
     };
     this.produtosForm.reset();
-    this.produtoService.postProdutos(novoProduto).subscribe({
+    this.produtoService.postProdutos(this.produto).subscribe({
       next: (produto) => {
         this.produtos.push(produto);
       },
@@ -65,6 +68,32 @@ export class ProdutoComponent {
         alert('Erro ao adicionar produto: ' + error.error?.message);
       }
     });
+    this.produto = new Produto();
+  }
+  atualizarProduto() {
+    this.produto = {
+      id: this.produto.id,
+      nome: this.produtosForm.value.nome,
+      preco: this.produtosForm.value.preco,
+    };
+    this.produtoService.putProduto(this.produto).subscribe({
+      next: () => {
+        this.getProdutos();
+      }, error: (error) => {
+        alert('Erro ao atualizar produto: ' + error.error?.message);
+      }
+    });
+    this.produto = new Produto();
+    this.atualizar = false;
+    this.produtosForm.reset();
+  }
+  solicitarAtualizarProduto(produto: Produto) {
+    this.atualizar = true;
+    this.produto = produto;
+    this.produtosForm.setValue({
+      nome: produto.nome,
+      preco: produto.preco
+    })
   }
   deletarProduto(id: number, event: Event) {
     this.confirmationService.confirm({
@@ -84,7 +113,7 @@ export class ProdutoComponent {
         });
       },
       reject: () => {
-        
+
       }
     });
   }

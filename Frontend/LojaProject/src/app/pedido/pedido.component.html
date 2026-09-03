@@ -2,15 +2,28 @@
     <p-accordion value="0">
         @for (item of pedidos; track $index) {
         <p-accordion-panel value={{item.id}}>
-            <p-accordion-header class="flex flex-row justify-around"><span>Pedido {{item.id}}</span><span>Qnt Produtos:
-                    {{item.produtos?.length}} | Valor Total: {{item.valorTotal}}</span></p-accordion-header>
+            <p-accordion-header>
+                <div class="flex items-center justify-between w-full mr-4">
+                    <span>
+                        <span class="pi pi-cart-arrow-down mr-2"></span>
+                        Pedido {{item.id}}
+                    </span>
+                    <span>
+                        <span class="pi pi-box mr-2"></span>Produtos:
+                        {{item.produtos?.length}} <span class="ml-6"></span> ${{item.valorTotal}}
+                        <p-confirmPopup />
+                        <p-button size="small" (click)="deletarPedido(item, $event)" class="ml-5" icon="pi pi-trash" variant="text"
+                            [raised]="true" severity="danger" />
+                    </span>
+                </div>
+            </p-accordion-header>
             <p-accordion-content>
                 <div *ngFor="let produto of item.produtos; let first = first" class="col-span-12">
                     <div class="flex flex-col sm:flex-row sm:items-center px-4 py-2 gap-2"
                         [ngClass]="{ 'border-t border-surface-200 dark:border-surface-700': !first }">
 
                         <div class="flex flex-col md:flex-row justify-between md:items-center flex-1 gap-3">
-                            <div class="text-base flex flex-col font-medium text-surface-900 dark:text-surface-0">
+                            <div class="text-base flex flex-col text-surface-900 dark:text-surface-0">
                                 {{ produto.nome }}
                                 |
                                 {{ '$' + produto.preco }}
@@ -19,8 +32,7 @@
 
                             <div class="flex flex-row gap-2">
                                 <p-confirmPopup />
-
-                                <p-button (click)="deletarProdutoPedido(item, produto)" severity="danger"
+                                <p-button [raised]="true" (click)="deletarProdutoPedido(item, produto, $event)" severity="danger"
                                     icon="pi pi-trash" size="small" class="p-button-outlined" />
                             </div>
                         </div>
