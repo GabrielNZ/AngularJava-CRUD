@@ -1,0 +1,13 @@
+{
+  "name": "loja-project-fullstack",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "concurrently \"npm run front\" \"npm run back\"",
+    "front": "cd Frontend/LojaProject && npm start",
+    "back": "cd Backend/LojaProject && mvnw.cmd spring-boot:run"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0"
+  }
+}
