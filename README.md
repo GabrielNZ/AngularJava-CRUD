@@ -7,7 +7,7 @@ Um simples CRUD Fullstack feito em Java e Angular.
 
 ## Estrutura do Projeto
 
-Duas paginas, uma de produtos, onde os mesmos podem ser **Criados**, *Atualizados**, **Deletados** ou **"Comprados"** e **adicionados** a um Pedido, a outra de Pedidos, onde se **lista** ou **deleta** tanto um Produto de um Pedido ou um Pedido inteiro.
+Duas paginas, uma de produtos, onde os mesmos podem ser **Criados**, **Atualizados**, **Deletados** ou **"Comprados"** e **adicionados** a um Pedido, a outra de Pedidos, onde se **lista** ou **deleta** tanto um Produto de um Pedido ou um Pedido inteiro.
 
 Indo além do projeto anterior em Angular onde se tinha apenas o Frontend, dou um paço a mais no meu aprendizado, incluindo um Backend inteiro na implementação do projeto.
 
