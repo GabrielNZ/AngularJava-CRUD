@@ -24,8 +24,8 @@ Regras de negocio:
 
 ## ✨ Front end
 
-<img width="500" height="330" alt="image" src="https://github.com/user-attachments/assets/2e0e1215-a5ad-4547-b3c4-64ad411d192b" />
-<img width="500" height="330" alt="image" src="https://github.com/user-attachments/assets/c10f08f1-6acd-41d1-b499-1b9e234d2665" />
+<img width="600" height="380" alt="image" src="https://github.com/user-attachments/assets/2e0e1215-a5ad-4547-b3c4-64ad411d192b" />
+<img width="600" height="380" alt="image" src="https://github.com/user-attachments/assets/c10f08f1-6acd-41d1-b499-1b9e234d2665" />
 
 # 🚦 Como Executar o Projeto
 ### 🛠 Pré-requisitos
